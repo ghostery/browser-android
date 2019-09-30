@@ -33,21 +33,10 @@ ARG UID
 ARG GID
 ARG USER
 ENV SHELL=/bin/bash
-<<<<<<< HEAD
 ENV NPM_CONFIG_PREFIX=/home/jenkins/.npm-global
 ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${NPM_CONFIG_PREFIX}/bin:${PATH}
 RUN getent group $GID || groupadd $USER --gid $GID && \
     useradd --create-home --shell /bin/bash $USER --uid $UID --gid $GID
-||||||| merged common ancestors
-ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${PATH}
-RUN getent group $GID || groupadd jenkins --gid $GID && \
-    useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
-=======
-ENV NPM_CONFIG_PREFIX=/home/$USER/.npm-global
-ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${NPM_CONFIG_PREFIX}/bin:${PATH}
-RUN getent group $GID || groupadd $USER --gid $GID && \
-    useradd --create-home --shell /bin/bash $USER --uid $UID --gid $GID
->>>>>>> upstream-releases
 
 # Add extra dependencies to the maven cache
 RUN mvn dependency:get \
@@ -76,13 +65,7 @@ USER $USER
 SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
-<<<<<<< HEAD
 RUN npm install --global appium wd npm@6.5.0
-||||||| merged common ancestors
-RUN npm install --global appium wd
-=======
-RUN /sdk/node/bin/npm install --global appium@1.10.0 wd
->>>>>>> upstream-releases
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
