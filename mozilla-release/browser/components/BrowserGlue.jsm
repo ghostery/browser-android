@@ -1031,7 +1031,9 @@ BrowserGlue.prototype = {
         break;
       case "shield-init-complete":
         this._shieldInitComplete = true;
+        /* Cliqz start o/
         this._sendMainPingCentrePing();
+        /o Cliqz end */
         break;
     }
   },
